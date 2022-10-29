@@ -1,0 +1,62 @@
+local win = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/sol"))()
+
+local win = win:New({
+  Name = "psX",
+  FolderToSave = "SolarisLibStuff"
+})
+
+local tab = win:Tab("Tab 1")
+local CharacterSec = tab:Section("Character")
+local EggSec = tab:Section("Egg")
+
+-- Globals
+_G.eggType = ""
+
+_G.WsVal = 16
+_G.JpVal = 50
+_G.useConfig = false
+
+CharacterSec:Slider("WalkSpeed", 16, 500, 0, 1,"Slider", function(v)
+    _G.WsVal = v > 1 and v or 16
+end)
+CharacterSec:Slider("JumpPower", 50, 300, 0, 1,"Slider", function(v)
+  _G.JpVal = v > 1 and v or 50
+end)
+
+CharacterSec:Toggle("Apply Configurments", false,"Toggle", function(v)
+    _G.useConfig = v
+    while _G.useConfig and task.wait() do
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.WsVal
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = _G.JpVal
+        if not _G.useConfig then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+        end
+    end
+end)
+
+local eggs_type = {
+    "Shiny Axolotl Egg",
+    "Cursed Egg",
+    "Pixel Egg"
+}
+
+EggSec:Dropdown("Egg", eggs_type, "", "", function(v)
+    _G.eggType = v
+end)
+EggSec:Toggle("Auto Open", false, "Toggle", function(v)
+    _G.use = v
+    while _G.use and task.wait(1) do
+        if not _G.use then break end;
+        workspace.__THINGS.__REMOTES:FindFirstChild("buy egg"):InvokeServer(
+            unpack(
+                {
+                 {
+                  (_G.eggType ~= "" and _G.eggType)or "Cursed Egg",
+                  false
+                 }
+                }
+            )
+        )
+    end
+end)
